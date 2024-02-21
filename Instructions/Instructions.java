@@ -48,7 +48,7 @@ public class Instructions {
         return (c >= '0' && c <= '9') || (c >= 'A' && c <= 'F') || (c >= 'a' && c <= 'f');
     }
 
-    public int ADD(Vector<String> word, HashMap<String, Integer> flag, HashMap<String, Integer> reg) {
+    public static int ADD(Vector<String> word, HashMap<String, Integer> flag, HashMap<String, Integer> reg) {
         if (word.size() != 2) {
             System.out.println("Invalid Input!");
             return -1;
@@ -58,7 +58,11 @@ public class Instructions {
             System.out.println("Sorry!");
             return -1;
         }
-        reg.put("A", reg.get("A") + reg.get(word.get(1)));
+        int val = reg.get("A") + reg.get(word.get(1));
+        reg.put("A", val & 0xFF);
+        flag.put("CY", (val > 0xff) ? 1 : 0);
+        flag.put("Z", (reg.get("A") == 0) ? 1 : 0);
+        flag.put("S", ((val & 0x80) == 1) ? 1 : 0);
         return 1;
     }
 
@@ -115,7 +119,7 @@ public class Instructions {
         return 3;
     }
 
-    public int SUB(Vector<String> word, HashMap<String, Integer> flag, HashMap<String, Integer> reg) {
+    public static int SUB(Vector<String> word, HashMap<String, Integer> flag, HashMap<String, Integer> reg) {
         if (word.size() != 2) {
             System.out.println("Invalid Input!");
             return -1;
@@ -125,7 +129,11 @@ public class Instructions {
             System.out.println("Sorry!");
             return -1;
         }
-        reg.put("A", reg.get("A") - reg.get(word.get(1)));
+        int val = reg.get("A") - reg.get(word.get(1));
+        reg.put("A", val & 0xFF);
+        flag.put("CY", (val > 0xff) ? 1 : 0);
+        flag.put("Z", (reg.get("A") == 0) ? 1 : 0);
+        flag.put("S", (val < 0) ? 1 : 0);
         return 1;
     }
 }

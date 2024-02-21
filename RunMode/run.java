@@ -12,9 +12,9 @@ import java.util.Map;
  * run
  */
 public class run {
-    int start = 0;
+    static int start = 0;
 
-    public void execute(ArrayList<String> instructions, HashMap<String, Integer> flag,
+    public static void execute(ArrayList<String> instructions, HashMap<String, Integer> flag,
             HashMap<Integer, Integer> memory, HashMap<String, Integer> reg) {
         System.out.println("Enter the Starting Address:");
         Scanner sc = new Scanner(System.in);
@@ -33,7 +33,7 @@ public class run {
             } else if (wd.get(0).compareTo("MVI") == 0) {
                 next_address = ob.MVI(wd, reg);
             } else if (wd.get(0).compareTo("ADD") == 0) {
-                next_address = ob.ADD(wd, flag, reg);
+                next_address = Instructions.ADD(wd, flag, reg);
             } else if (wd.get(0).compareTo("HLT") == 0) {
                 next_address = 1;
                 break;
@@ -44,7 +44,7 @@ public class run {
             } else if (wd.get(0).compareTo("STA") == 0) {
                 next_address += ob.STA(wd, reg, memory);
             } else if (wd.get(0).compareTo("SUB") == 0) {
-                next_address += ob.SUB(wd, flag, reg);
+                next_address += Instructions.SUB(wd, flag, reg);
             } else {
                 System.err.println("Invalid Input program Terminated!");
                 break;
@@ -56,33 +56,34 @@ public class run {
         sc.close();
     }
 
-    public void print_architecture(HashMap<String, Integer> reg, HashMap<String, Integer> flag,
+    public static void print_architecture(HashMap<String, Integer> reg, HashMap<String, Integer> flag,
             HashMap<Integer, Integer> memory) {
-        System.out.println("-----------------------------");
-        System.out.println("| A  | B | C | D | E | H | L |");
-        System.out.println("-----------------------------");
-        System.out
-                .println("| " + reg.get("A") + " |" + reg.get("B") + " | " + reg.get("C") + "| "
-                        + reg.get("D") + " | "
-                        + reg.get("E") + " | " + reg.get("H") + " | " + reg.get("L") + " | ");
-        System.out.println("-----------------------------");
-        System.out.println("\n\n\n");
-        System.out.println("\nFlag Register");
+        // Print Register values
+        System.out.println("+----------------------------------+");
+        System.out.println("| A  | B  | C  | D  | E  | H  | L  |");
+        System.out.println("+---------------------------------");
+        System.out.printf("| %02d | %02d | %02d | %02d | %02d | %02d | %02d |\n",
+                reg.get("A"), reg.get("B"), reg.get("C"), reg.get("D"), reg.get("E"), reg.get("H"), reg.get("L"));
+        System.out.println("----------------------------------+");
+        System.out.println();
+
+        // Print Flag Register values
+        System.out.println("Flag Register");
         System.out.println("------------------------");
         System.out.println("| S  | Z | AC | P | CY |");
         System.out.println("------------------------");
-        System.out
-                .println("| " + flag.get("S") + "  | " + flag.get("Z") + " | " + flag.get("AC") + "  | "
-                        + flag.get("P") + " | "
-                        + flag.get("CY") + "  |");
+        System.out.printf("| %d  | %d | %d  | %d | %d  |\n",
+                flag.get("S"), flag.get("Z"), flag.get("AC"), flag.get("P"), flag.get("CY"));
         System.out.println("------------------------");
-        System.out.println("\n");
-        if (memory.size() != 0) {
+        System.out.println();
+
+        // Print Memory contents
+        if (!memory.isEmpty()) {
+            System.out.println("Memory Address : Value at Address");
             for (Map.Entry<Integer, Integer> e : memory.entrySet()) {
-                System.out.println("Memory Address : Value at Address");
-                System.out.println(e.getKey() + ":" + e.getValue());
+                System.out.printf("%dX : %d\n", e.getKey(), e.getValue());
             }
         }
-
     }
+
 }

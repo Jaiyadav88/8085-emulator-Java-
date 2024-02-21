@@ -43,18 +43,17 @@ public class emulator {
                 instructions.add(line);
             }
             System.out.println("+------------------------------------------------------------+");
-            System.out.println("|                                                             |");
+            System.out.println("|                                                            |");
             System.out.println("-------------------Welcome to 8085 Emulator-------------------");
-            System.out.println("|                                                             |");
+            System.out.println("|                                                            |");
             System.out.println("+------------------------------------------------------------+");
             char ch;
             Scanner sc = new Scanner(System.in);
             System.out.println("Enter the mode you want to select\nR-Run Mode\nD-Debugger Mode");
             ch = sc.next().charAt(0);
-            run ob = new run();
             switch (ch) {
                 case 'R':
-                    ob.execute(instructions, flag, memory, register);
+                    run.execute(instructions, flag, memory, register);
                     break;
             }
             br.close();
