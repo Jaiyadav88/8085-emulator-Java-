@@ -19,7 +19,6 @@ public class run {
         System.out.println("Enter the Starting Address:");
         Scanner sc = new Scanner(System.in);
         start = sc.nextInt();
-        Instructions ob = new Instructions();
         for (int i = 0; i < instructions.size(); i++) {
             int next_address = 0;
             Vector<String> wd = new Vector<>();
@@ -29,22 +28,28 @@ public class run {
                 wd.add(s);
             }
             if (wd.get(0).compareTo("MOV") == 0) {
-                next_address = ob.MOV(wd, reg);
+                next_address = Instructions.MOV(wd, reg);
             } else if (wd.get(0).compareTo("MVI") == 0) {
-                next_address = ob.MVI(wd, reg);
+                next_address = Instructions.MVI(wd, reg);
             } else if (wd.get(0).compareTo("ADD") == 0) {
                 next_address = Instructions.ADD(wd, flag, reg);
             } else if (wd.get(0).compareTo("HLT") == 0) {
                 next_address = 1;
                 break;
             } else if (wd.get(0).compareTo("LXI") == 0) {
-                next_address = ob.LXI(wd, reg, memory);
+                next_address = Instructions.LXI(wd, reg, memory);
             } else if (wd.get(0).compareTo("LDA") == 0) {
-                next_address = ob.LDA(wd, reg, memory);
+                next_address = Instructions.LDA(wd, reg, memory);
             } else if (wd.get(0).compareTo("STA") == 0) {
-                next_address += ob.STA(wd, reg, memory);
+                next_address += Instructions.STA(wd, reg, memory);
             } else if (wd.get(0).compareTo("SUB") == 0) {
                 next_address += Instructions.SUB(wd, flag, reg);
+            } else if (wd.get(0).equals("LHLD ")) {
+                next_address += Instructions.LHLD(wd, flag, reg, memory);
+            } else if (wd.get(0).equals("STAX")) {
+                next_address += Instructions.STAX(wd, flag, reg, memory);
+            } else if (wd.get(0).equals("XCHG")) {
+                next_address += Instructions.XCHG(wd, reg);
             } else {
                 System.err.println("Invalid Input program Terminated!");
                 break;

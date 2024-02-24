@@ -42,11 +42,19 @@ public class emulator {
             while ((line = br.readLine()) != null) {
                 instructions.add(line);
             }
-            System.out.println("+------------------------------------------------------------+");
-            System.out.println("|                                                            |");
-            System.out.println("-------------------Welcome to 8085 Emulator-------------------");
-            System.out.println("|                                                            |");
-            System.out.println("+------------------------------------------------------------+");
+
+            System.out.println(
+                    "            _                                                                ___   ___   ___ ____  ");
+            System.out.println(
+                    "  _ __ ___ (_) ___ _ __ ___  _ __  _ __ ___   ___ ___  ___ ___  ___  _ __   ( _ ) / _ \\ ( _ ) ___| ");
+            System.out.println(
+                    " | '_ ` _ \\| |/ __| '__/ _ \\| '_ \\| '__/ _ \\ / __/ _ \\/ __/ __|/ _ \\| '__|  / _ \\| | | |/ _ \\___ \\ ");
+            System.out.println(
+                    " | | | | | | | (__| | | (_) | |_) | | | (_) | (_|  __/\\__ \\__ \\ (_) | |    | (_) | |_| | (_) |__) |");
+            System.out.println(
+                    " |_| |_| |_|_|\\___|_|  \\___/| .__/|_|  \\___/ \\___\\___||___/___/\\___/|_|     \\___/ \\___/ \\___/____/ ");
+            System.out.println(
+                    "                            |_|                                                                    ");
             char ch;
             Scanner sc = new Scanner(System.in);
             System.out.println("Enter the mode you want to select\nR-Run Mode\nD-Debugger Mode");
