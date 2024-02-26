@@ -47,9 +47,11 @@ public class run {
             } else if (wd.get(0).equals("LHLD ")) {
                 next_address += Instructions.LHLD(wd, flag, reg, memory);
             } else if (wd.get(0).equals("STAX")) {
-                next_address += Instructions.STAX(wd, flag, reg, memory);
+                next_address += Instructions.STAX(wd, reg, memory);
             } else if (wd.get(0).equals("XCHG")) {
                 next_address += Instructions.XCHG(wd, reg);
+            } else if (wd.get(0).equals("ADI")) {
+                next_address += Instructions.ADI(wd, reg, flag);
             } else {
                 System.err.println("Invalid Input program Terminated!");
                 break;

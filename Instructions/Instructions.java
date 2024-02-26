@@ -156,7 +156,7 @@ public class Instructions {
         return 3;
     }
 
-    public static int STAX(Vector<String> word, HashMap<String, Integer> flag, HashMap<String, Integer> reg,
+    public static int STAX(Vector<String> word, HashMap<String, Integer> reg,
             HashMap<Integer, Integer> memory) {
         if (word.size() != 2) {
             System.out.println("Invalid Input!");
@@ -195,6 +195,35 @@ public class Instructions {
         reg.put("L", e_val);
         reg.put("D", h_val);
         reg.put("E", l_val);
+        return 1;
+    }
+
+    public static int ADI(Vector<String> word, HashMap<String, Integer> reg, HashMap<String, Integer> flag) {
+        if (word.size() != 2 || word.get(1).length() != 2) {
+            System.out.println("Invalid Input!");
+            return -1;
+        }
+        int val = reg.get("A") + reg.get(word.get(1));
+        reg.put("A", val & 0xFF);
+        flag.put("CY", (val > 0xff) ? 1 : 0);
+        flag.put("Z", (reg.get("A") == 0) ? 1 : 0);
+        flag.put("S", ((val & 0x80) == 1) ? 1 : 0);
+        reg.put("A", reg.get("A") + val);
+        return 2;
+    }
+
+    public static int INR(Vector<String> word, HashMap<String, Integer> reg, HashMap<String, Integer> flag) {
+        if (word.size() != 2 && reg.containsKey(word.get(1)) == false) {
+            System.out.println("Invalid Input!");
+            return -1;
+        }
+        int val = reg.get(word.get(1));
+        val = val + 1;
+        flag.put("AC", (val & 0x0F) < 1 ? 1 : 0);
+        flag.put("CY", (val > 0xff) ? 1 : 0);
+        flag.put("S", (val & 0x80) == 1 ? 1 : 0);
+        flag.put("Z", (val & 0xFF) == 0 ? 1 : 0);
+        reg.put(word.get(1), val);
         return 1;
     }
 }
