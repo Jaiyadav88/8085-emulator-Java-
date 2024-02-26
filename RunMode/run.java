@@ -52,6 +52,8 @@ public class run {
                 next_address += Instructions.XCHG(wd, reg);
             } else if (wd.get(0).equals("ADI")) {
                 next_address += Instructions.ADI(wd, reg, flag);
+            } else if (wd.get(0).equals("INR")) {
+                next_address += Instructions.INR(wd, reg, flag);
             } else {
                 System.err.println("Invalid Input program Terminated!");
                 break;

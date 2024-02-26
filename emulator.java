@@ -1,7 +1,9 @@
 import RunMode.run;
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -37,6 +39,15 @@ public class emulator {
                 flag.put("CY", 0);
                 try {
                         ArrayList<String> instructions = new ArrayList<>();
+                        System.out.println("Enter the 8085 Assembley Program");
+                        BufferedWriter rd = new BufferedWriter(new FileWriter("./test.txt"));
+                        Scanner sc = new Scanner(System.in);
+                        String s = "";
+                        while (!(s = sc.nextLine()).equals("HLT")) {
+                                rd.write(s);
+                                rd.newLine();
+                        }
+                        rd.close();
                         BufferedReader br = new BufferedReader(new FileReader("./test.txt"));
                         String line = "";
                         while ((line = br.readLine()) != null) {
@@ -55,7 +66,6 @@ public class emulator {
                         System.out.println(
                                         "                            |_|                                                                    ");
                         char ch;
-                        Scanner sc = new Scanner(System.in);
                         System.out.println("Enter the mode you want to select\nR-Run Mode\nD-Debugger Mode");
                         ch = sc.next().charAt(0);
                         switch (ch) {
