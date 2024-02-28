@@ -43,7 +43,12 @@ public class emulator {
                         BufferedWriter rd = new BufferedWriter(new FileWriter("./test.txt"));
                         Scanner sc = new Scanner(System.in);
                         String s = "";
-                        while (!(s = sc.nextLine()).equals("HLT")) {
+                        while (true) {
+                                s = sc.nextLine();
+                                if (s.equals("HLT")) {
+                                        rd.write(s);
+                                        break;
+                                }
                                 rd.write(s);
                                 rd.newLine();
                         }

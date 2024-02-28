@@ -147,12 +147,25 @@ public class Instructions {
         int address = Integer.parseInt(add);
         int num1 = memory.get(address);
         if (address <= 65535) {
-            reg.put("L", memory.get(address));
+            reg.put("L", num1);
             address += 1;
             reg.put("H", memory.get(address));
         } else {
             System.out.println("Address is exceeding FFFF");
         }
+        return 3;
+    }
+
+    public static int SHLD(Vector<String> word, HashMap<String, Integer> reg, HashMap<Integer, Integer> memory) {
+        if (word.size() != 2 || !Hex(word.get(1))) {
+            System.out.println("Invalid Input!");
+            return -1;
+        }
+        int val1 = reg.get("H");
+        int val2 = reg.get("L");
+        int add = Integer.parseInt(word.get(1));
+        memory.put(add, val1);
+        memory.put(add + 1, val2);
         return 3;
     }
 
@@ -224,6 +237,18 @@ public class Instructions {
         flag.put("S", (val & 0x80) == 1 ? 1 : 0);
         flag.put("Z", (val & 0xFF) == 0 ? 1 : 0);
         reg.put(word.get(1), val);
+        return 1;
+    }
+
+    public static int DCR(Vector<String> word, HashMap<String, Integer> reg, HashMap<String, Integer> flag) {
+        if (word.size() != 2 || reg.containsKey(word.get(1)) == false) {
+            return -1;
+        }
+        int val = reg.get(word.get(1)) - 1;
+        reg.put(word.get(1), val & 0xff);
+        flag.put("AC", (val & 0x0F) < 1 ? 1 : 0);
+        flag.put("S", (val & 0x80) == 1 ? 1 : 0);
+        flag.put("Z", (val & 0xFF) == 0 ? 1 : 0);
         return 1;
     }
 }

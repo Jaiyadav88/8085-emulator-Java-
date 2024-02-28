@@ -35,6 +35,7 @@ public class run {
                 next_address = Instructions.ADD(wd, flag, reg);
             } else if (wd.get(0).compareTo("HLT") == 0) {
                 next_address = 1;
+                System.out.println(start + ":" + instructions.get(i));
                 break;
             } else if (wd.get(0).compareTo("LXI") == 0) {
                 next_address = Instructions.LXI(wd, reg, memory);
@@ -44,7 +45,7 @@ public class run {
                 next_address += Instructions.STA(wd, reg, memory);
             } else if (wd.get(0).compareTo("SUB") == 0) {
                 next_address += Instructions.SUB(wd, flag, reg);
-            } else if (wd.get(0).equals("LHLD ")) {
+            } else if (wd.get(0).equals("LHLD")) {
                 next_address += Instructions.LHLD(wd, flag, reg, memory);
             } else if (wd.get(0).equals("STAX")) {
                 next_address += Instructions.STAX(wd, reg, memory);
@@ -54,8 +55,12 @@ public class run {
                 next_address += Instructions.ADI(wd, reg, flag);
             } else if (wd.get(0).equals("INR")) {
                 next_address += Instructions.INR(wd, reg, flag);
+            } else if (wd.get(0).equals("SHLD")) {
+                next_address += Instructions.SHLD(wd, reg, memory);
+            } else if (wd.get(0).equals("DCR")) {
+                next_address += Instructions.DCR(wd, reg, flag);
             } else {
-                System.err.println("Invalid Input program Terminated!");
+                System.out.println("Invalid Input program Terminated!");
                 break;
             }
             System.out.println(start + ":" + instructions.get(i));
@@ -70,20 +75,20 @@ public class run {
         // Print Register values
         System.out.println("+----------------------------------+");
         System.out.println("| A  | B  | C  | D  | E  | H  | L  |");
-        System.out.println("+---------------------------------");
+        System.out.println("+----------------------------------+");
         System.out.printf("| %02d | %02d | %02d | %02d | %02d | %02d | %02d |\n",
                 reg.get("A"), reg.get("B"), reg.get("C"), reg.get("D"), reg.get("E"), reg.get("H"), reg.get("L"));
-        System.out.println("----------------------------------+");
+        System.out.println("+----------------------------------+");
         System.out.println();
 
         // Print Flag Register values
         System.out.println("Flag Register");
-        System.out.println("------------------------");
+        System.out.println("+----------------------+");
         System.out.println("| S  | Z | AC | P | CY |");
-        System.out.println("------------------------");
+        System.out.println("+----------------------+");
         System.out.printf("| %d  | %d | %d  | %d | %d  |\n",
                 flag.get("S"), flag.get("Z"), flag.get("AC"), flag.get("P"), flag.get("CY"));
-        System.out.println("------------------------");
+        System.out.println("+----------------------+");
         System.out.println();
 
         // Print Memory contents
