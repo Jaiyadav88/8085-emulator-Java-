@@ -251,4 +251,25 @@ public class Instructions {
         flag.put("Z", (val & 0xFF) == 0 ? 1 : 0);
         return 1;
     }
+
+    public static int INX(Vector<String> word, HashMap<String, Integer> reg, HashMap<String, Integer> flag) {
+        if (word.size() != 2 || (!word.get(1).equals("B") && !word.get(1).equals("D")
+                && !word.get(1).equals("H"))) {
+            return -1;
+        }
+        int val1 = 0;
+        if (word.get(1) == "B") {
+            val1 = reg.get("C") + 1;
+            reg.put("C", val1 & 0xff);
+        } else if (word.get(1) == "D") {
+            val1 = reg.get("E") + 1;
+            reg.put("E", val1 & 0xff);
+        } else if (word.get(1) == "H") {
+            val1 = reg.get("L") + 1;
+            reg.put("L", val1 & 0xff);
+        }
+        flag.put("S", (val1 & 0x80) == 1 ? 1 : 0);
+        flag.put("Z", (val1 == 0) ? 1 : 0);
+        return 1;
+    }
 }

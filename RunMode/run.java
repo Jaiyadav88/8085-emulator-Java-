@@ -63,6 +63,10 @@ public class run {
                 System.out.println("Invalid Input program Terminated!");
                 break;
             }
+            if (next_address == -1) {
+                System.out.println("Program Terminated!");
+                break;
+            }
             System.out.println(start + ":" + instructions.get(i));
             start += next_address;
         }
