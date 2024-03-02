@@ -13,6 +13,7 @@ import java.util.Map;
  */
 public class run {
     static int start = 0;
+    static HashMap<Integer, String> pc = new HashMap<>();
 
     public static void execute(ArrayList<String> instructions, HashMap<String, Integer> flag,
             HashMap<Integer, Integer> memory, HashMap<String, Integer> reg) {
@@ -34,8 +35,8 @@ public class run {
             } else if (wd.get(0).compareTo("ADD") == 0) {
                 next_address = Instructions.ADD(wd, flag, reg);
             } else if (wd.get(0).compareTo("HLT") == 0) {
+                pc.put(start, instructions.get(i));
                 next_address = 1;
-                System.out.println(start + ":" + instructions.get(i));
                 break;
             } else if (wd.get(0).compareTo("LXI") == 0) {
                 next_address = Instructions.LXI(wd, reg, memory);
@@ -59,6 +60,14 @@ public class run {
                 next_address += Instructions.SHLD(wd, reg, memory);
             } else if (wd.get(0).equals("DCR")) {
                 next_address += Instructions.DCR(wd, reg, flag);
+            } else if (wd.get(0).equals("INX")) {
+                next_address += Instructions.INX(wd, reg, flag);
+            } else if (wd.get(0).equals("CMA")) {
+                next_address += Instructions.CMA(wd, reg, flag);
+            } else if (wd.get(0).equals("CMP")) {
+                next_address += Instructions.CMP(wd, reg, flag);
+            } else if (wd.get(0).equals("JMP")) {
+                start = Integer.parseInt(wd.get(1));
             } else {
                 System.out.println("Invalid Input program Terminated!");
                 break;
@@ -67,7 +76,7 @@ public class run {
                 System.out.println("Program Terminated!");
                 break;
             }
-            System.out.println(start + ":" + instructions.get(i));
+            pc.put(start, instructions.get(i));
             start += next_address;
         }
         print_architecture(reg, flag, memory);
@@ -76,6 +85,12 @@ public class run {
 
     public static void print_architecture(HashMap<String, Integer> reg, HashMap<String, Integer> flag,
             HashMap<Integer, Integer> memory) {
+        // Print Program Counter
+        if (!pc.isEmpty()) {
+            for (Map.Entry<Integer, String> e : pc.entrySet()) {
+                System.out.println(e.getKey() + ":" + e.getValue());
+            }
+        }
         // Print Register values
         System.out.println("+----------------------------------+");
         System.out.println("| A  | B  | C  | D  | E  | H  | L  |");

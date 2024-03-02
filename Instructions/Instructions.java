@@ -1,5 +1,6 @@
 package Instructions;
 
+import RunMode.*;
 import java.util.HashMap;
 import java.util.Vector;
 
@@ -242,6 +243,7 @@ public class Instructions {
 
     public static int DCR(Vector<String> word, HashMap<String, Integer> reg, HashMap<String, Integer> flag) {
         if (word.size() != 2 || reg.containsKey(word.get(1)) == false) {
+            System.out.println("Invalid Input!");
             return -1;
         }
         int val = reg.get(word.get(1)) - 1;
@@ -255,21 +257,57 @@ public class Instructions {
     public static int INX(Vector<String> word, HashMap<String, Integer> reg, HashMap<String, Integer> flag) {
         if (word.size() != 2 || (!word.get(1).equals("B") && !word.get(1).equals("D")
                 && !word.get(1).equals("H"))) {
+            System.out.println("Invalid Input!");
             return -1;
         }
         int val1 = 0;
-        if (word.get(1) == "B") {
+        if (word.get(1).equals("B")) {
             val1 = reg.get("C") + 1;
             reg.put("C", val1 & 0xff);
-        } else if (word.get(1) == "D") {
+        } else if (word.get(1).equals("D")) {
             val1 = reg.get("E") + 1;
             reg.put("E", val1 & 0xff);
-        } else if (word.get(1) == "H") {
+        } else if (word.get(1).equals("H")) {
             val1 = reg.get("L") + 1;
             reg.put("L", val1 & 0xff);
         }
-        flag.put("S", (val1 & 0x80) == 1 ? 1 : 0);
         flag.put("Z", (val1 == 0) ? 1 : 0);
+        flag.put("S", (val1 & 0x80) == 1 ? 1 : 0);
         return 1;
     }
+
+    public static int CMA(Vector<String> word, HashMap<String, Integer> reg, HashMap<String, Integer> flag) {
+        if (word.size() != 1) {
+            System.out.println("Invalid Input!");
+            return -1;
+        }
+        String bin = Integer.toBinaryString(reg.get("A"));
+        String s = "";
+        for (char ch : bin.toCharArray())
+            s = ch + s;
+        int num = Integer.parseInt(s, 2);
+        reg.put("A", num);
+        return 1;
+    }
+
+    public static int CMP(Vector<String> word, HashMap<String, Integer> reg, HashMap<String, Integer> flag) {
+        if (word.size() != 2 || reg.containsKey(word.get(1)) == false) {
+            System.out.println("Invalid Input!");
+            return -1;
+        }
+        int diff = reg.get("A") - reg.get(word.get(1));
+        flag.put("S", diff < 0 ? 1 : 0);
+        flag.put("Z", diff == 0 ? 1 : 0);
+        flag.put("CY", diff < 0 ? 1 : 0);
+        return 1;
+    }
+
+    public static int JMP(Vector<String> word) {
+        if (word.size() != 1 || word.get(1).length() != 4) {
+            System.out.println("Invalid Address!");
+            return -1;
+        }
+        return 3;
+    }
+
 }
