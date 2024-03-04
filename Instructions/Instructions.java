@@ -1,6 +1,5 @@
 package Instructions;
 
-import RunMode.*;
 import java.util.HashMap;
 import java.util.Vector;
 
@@ -283,8 +282,12 @@ public class Instructions {
         }
         String bin = Integer.toBinaryString(reg.get("A"));
         String s = "";
-        for (char ch : bin.toCharArray())
-            s = ch + s;
+        for (char ch : bin.toCharArray()) {
+            if (ch == '0')
+                s = s + "1";
+            else
+                s = s + "0";
+        }
         int num = Integer.parseInt(s, 2);
         reg.put("A", num);
         return 1;

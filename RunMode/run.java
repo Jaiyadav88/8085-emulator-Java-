@@ -14,12 +14,14 @@ import java.util.Map;
 public class run {
     static int start = 0;
     static HashMap<Integer, String> pc = new HashMap<>();
+    static Map<Integer, Integer> mp = new HashMap<>();
 
     public static void execute(ArrayList<String> instructions, HashMap<String, Integer> flag,
             HashMap<Integer, Integer> memory, HashMap<String, Integer> reg) {
         System.out.println("Enter the Starting Address:");
         Scanner sc = new Scanner(System.in);
         start = sc.nextInt();
+        int jumpadd = 0;
         for (int i = 0; i < instructions.size(); i++) {
             int next_address = 0;
             Vector<String> wd = new Vector<>();
@@ -66,8 +68,6 @@ public class run {
                 next_address += Instructions.CMA(wd, reg, flag);
             } else if (wd.get(0).equals("CMP")) {
                 next_address += Instructions.CMP(wd, reg, flag);
-            } else if (wd.get(0).equals("JMP")) {
-                start = Integer.parseInt(wd.get(1));
             } else {
                 System.out.println("Invalid Input program Terminated!");
                 break;
@@ -77,6 +77,7 @@ public class run {
                 break;
             }
             pc.put(start, instructions.get(i));
+            mp.put(start, i);
             start += next_address;
         }
         print_architecture(reg, flag, memory);
