@@ -1,0 +1,4 @@
+MVI A,10
+MVI B,20
+CMP B
+HLT
