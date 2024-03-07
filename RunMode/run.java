@@ -21,7 +21,6 @@ public class run {
         System.out.println("Enter the Starting Address:");
         Scanner sc = new Scanner(System.in);
         start = sc.nextInt();
-        int jumpadd = 0;
         for (int i = 0; i < instructions.size(); i++) {
             int next_address = 0;
             Vector<String> wd = new Vector<>();

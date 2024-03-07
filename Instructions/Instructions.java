@@ -59,6 +59,11 @@ public class Instructions {
             return -1;
         }
         int val = reg.get("A") + reg.get(word.get(1));
+        String v = String.valueOf(val);
+        if (v.length() >= 3) {
+            reg.put("A", 0);
+            return 1;
+        }
         reg.put("A", val & 0xFF);
         flag.put("CY", (val > 0xff) ? 1 : 0);
         flag.put("Z", (reg.get("A") == 0) ? 1 : 0);
@@ -130,6 +135,11 @@ public class Instructions {
             return -1;
         }
         int val = reg.get("A") - reg.get(word.get(1));
+        String v = String.valueOf(val);
+        if (v.length() >= 3 || val < 0) {
+            reg.put("A", 0);
+            return 1;
+        }
         reg.put("A", val & 0xFF);
         flag.put("CY", (val > 0xff) ? 1 : 0);
         flag.put("Z", (reg.get("A") == 0) ? 1 : 0);
@@ -217,6 +227,11 @@ public class Instructions {
             return -1;
         }
         int val = reg.get("A") + reg.get(word.get(1));
+        String v = String.valueOf(val);
+        if (v.length() >= 3) {
+            reg.put("A", 0);
+            return 1;
+        }
         reg.put("A", val & 0xFF);
         flag.put("CY", (val > 0xff) ? 1 : 0);
         flag.put("Z", (reg.get("A") == 0) ? 1 : 0);
