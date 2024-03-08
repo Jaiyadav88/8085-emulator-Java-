@@ -59,24 +59,28 @@ public class Instructions {
             return -1;
         }
         int val = reg.get("A") + reg.get(word.get(1));
-        String v = String.valueOf(val);
-        if (v.length() >= 3) {
-            reg.put("A", 0);
-            return 1;
+        String s = Integer.toBinaryString(val);
+        int ones = 0;
+        for (char ch : s.toCharArray()) {
+            if (ch == '1')
+                ones++;
         }
+        if (ones % 2 == 0)
+            flag.put("P", 1);
         reg.put("A", val & 0xFF);
-        flag.put("CY", (val > 0xff) ? 1 : 0);
+        flag.put("AC", ((val & 0x0F) + 1) > 0x0F ? 1 : 0);
+        flag.put("CY", (val > 0xFF) ? 1 : 0);
         flag.put("Z", (reg.get("A") == 0) ? 1 : 0);
         flag.put("S", ((val & 0x80) == 1) ? 1 : 0);
         return 1;
     }
 
     public static int LXI(Vector<String> word, HashMap<String, Integer> reg, HashMap<Integer, Integer> memory) {
-        String add = word.get(2);
         if (word.size() != 3 || word.get(2).length() != 4) {
             System.out.println("Invalid Input!");
             return -1;
         }
+        String add = word.get(2);
         while (add.length() < 4)
             add = "0" + add;
         if (word.get(1).equals("B")) {
@@ -135,12 +139,16 @@ public class Instructions {
             return -1;
         }
         int val = reg.get("A") - reg.get(word.get(1));
-        String v = String.valueOf(val);
-        if (v.length() >= 3 || val < 0) {
-            reg.put("A", 0);
-            return 1;
+        String s = Integer.toBinaryString(val);
+        int ones = 0;
+        for (char ch : s.toCharArray()) {
+            if (ch == '1')
+                ones++;
         }
-        reg.put("A", val & 0xFF);
+        if (ones % 2 == 0)
+            flag.put("P", 1);
+        reg.put("A", Math.abs(val & 0xFF));
+        flag.put("AC", ((val & 0x0F) - 1) > (reg.get("A") & 0x0F) ? 0 : 1);
         flag.put("CY", (val > 0xff) ? 1 : 0);
         flag.put("Z", (reg.get("A") == 0) ? 1 : 0);
         flag.put("S", (val < 0) ? 1 : 0);
@@ -226,17 +234,19 @@ public class Instructions {
             System.out.println("Invalid Input!");
             return -1;
         }
-        int val = reg.get("A") + reg.get(word.get(1));
-        String v = String.valueOf(val);
-        if (v.length() >= 3) {
-            reg.put("A", 0);
-            return 1;
+        int val = reg.get("A") + Integer.parseInt(word.get(1));
+        String s = Integer.toBinaryString(val);
+        int ones = 0;
+        for (char ch : s.toCharArray()) {
+            if (ch == '1')
+                ones++;
         }
-        reg.put("A", val & 0xFF);
+        if (ones % 2 == 0)
+            flag.put("P", 1);
+        reg.put("A", val & 0xff);
         flag.put("CY", (val > 0xff) ? 1 : 0);
         flag.put("Z", (reg.get("A") == 0) ? 1 : 0);
         flag.put("S", ((val & 0x80) == 1) ? 1 : 0);
-        reg.put("A", reg.get("A") + val);
         return 2;
     }
 
@@ -247,7 +257,15 @@ public class Instructions {
         }
         int val = reg.get(word.get(1));
         val = val + 1;
-        flag.put("AC", (val & 0x0F) < 1 ? 1 : 0);
+        String s = Integer.toBinaryString(val);
+        int ones = 0;
+        for (char ch : s.toCharArray()) {
+            if (ch == '1')
+                ones++;
+        }
+        if (ones % 2 == 0)
+            flag.put("P", 1);
+        flag.put("AC", (val & 0x0F) > 9 ? 1 : 0);
         flag.put("CY", (val > 0xff) ? 1 : 0);
         flag.put("S", (val & 0x80) == 1 ? 1 : 0);
         flag.put("Z", (val & 0xFF) == 0 ? 1 : 0);
@@ -261,8 +279,16 @@ public class Instructions {
             return -1;
         }
         int val = reg.get(word.get(1)) - 1;
+        String s = Integer.toBinaryString(val);
+        int ones = 0;
+        for (char ch : s.toCharArray()) {
+            if (ch == '1')
+                ones++;
+        }
+        if (ones % 2 == 0)
+            flag.put("P", 1);
         reg.put(word.get(1), val & 0xff);
-        flag.put("AC", (val & 0x0F) < 1 ? 1 : 0);
+        flag.put("AC", (val & 0x0F) > 9 ? 1 : 0);
         flag.put("S", (val & 0x80) == 1 ? 1 : 0);
         flag.put("Z", (val & 0xFF) == 0 ? 1 : 0);
         return 1;
@@ -275,18 +301,31 @@ public class Instructions {
             return -1;
         }
         int val1 = 0;
+        int regValue = 0;
         if (word.get(1).equals("B")) {
-            val1 = reg.get("C") + 1;
+            regValue = reg.get("C");
+            val1 = regValue + 1;
             reg.put("C", val1 & 0xff);
         } else if (word.get(1).equals("D")) {
-            val1 = reg.get("E") + 1;
+            regValue = reg.get("E");
+            val1 = regValue + 1;
             reg.put("E", val1 & 0xff);
         } else if (word.get(1).equals("H")) {
-            val1 = reg.get("L") + 1;
+            regValue = reg.get("L");
+            val1 = regValue + 1;
             reg.put("L", val1 & 0xff);
         }
+        String s = Integer.toBinaryString(val1);
+        int ones = 0;
+        for (char ch : s.toCharArray()) {
+            if (ch == '1')
+                ones++;
+        }
+        if (ones % 2 == 0)
+            flag.put("P", 1);
+        flag.put("AC", ((regValue & 0x0F) + 1) > 0x0F ? 1 : 0);
         flag.put("Z", (val1 == 0) ? 1 : 0);
-        flag.put("S", (val1 & 0x80) == 1 ? 1 : 0);
+        flag.put("S", (val1 & 0x80) == 0x80 ? 1 : 0);
         return 1;
     }
 
@@ -314,18 +353,46 @@ public class Instructions {
             return -1;
         }
         int diff = reg.get("A") - reg.get(word.get(1));
+        String s = Integer.toBinaryString(diff);
+        int ones = 0;
+        for (char ch : s.toCharArray()) {
+            if (ch == '1')
+                ones++;
+        }
+        if (ones % 2 == 0)
+            flag.put("P", 1);
+        flag.put("AC", (diff & 0x0F) > 9 ? 1 : 0);
         flag.put("S", diff < 0 ? 1 : 0);
         flag.put("Z", diff == 0 ? 1 : 0);
         flag.put("CY", diff < 0 ? 1 : 0);
         return 1;
     }
 
-    public static int JMP(Vector<String> word) {
-        if (word.size() != 1 || word.get(1).length() != 4) {
-            System.out.println("Invalid Address!");
+    public static int SUI(Vector<String> word, HashMap<String, Integer> flag, HashMap<String, Integer> reg) {
+        if (word.size() != 2) {
+            System.out.println("Invalid Input!");
             return -1;
         }
-        return 3;
+        if (word.get(1).length() != 2) {
+            System.out.println("Invalid Instruction!");
+            System.out.println("Sorry!");
+            return -1;
+        }
+        int val = reg.get("A") - Integer.parseInt(word.get(1));
+        String s = Integer.toBinaryString(val);
+        int ones = 0;
+        for (char ch : s.toCharArray()) {
+            if (ch == '1')
+                ones++;
+        }
+        if (ones % 2 == 0)
+            flag.put("P", 1);
+        reg.put("A", Math.abs(val & 0xFF));
+        flag.put("AC", ((val & 0x0F) - 1) > (reg.get("A") & 0x0F) ? 0 : 1);
+        flag.put("CY", (val > 0xff) ? 1 : 0);
+        flag.put("Z", (reg.get("A") == 0) ? 1 : 0);
+        flag.put("S", (val < 0) ? 1 : 0);
+        return 1;
     }
 
 }

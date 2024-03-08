@@ -44,10 +44,8 @@ public class emulator {
                         String s = "";
                         while (true) {
                                 s = sc.nextLine();
-                                if (s.equals("HLT")) {
-                                        rd.write(s);
+                                if (s.equals("EXIT"))
                                         break;
-                                }
                                 rd.write(s);
                                 rd.newLine();
                         }

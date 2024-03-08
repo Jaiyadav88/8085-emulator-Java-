@@ -1,11 +1,14 @@
 package RunMode;
 
+import Branch.branch;
+import Programcounter.*;
 import Instructions.Instructions;
 import java.util.Scanner;
 import java.util.StringTokenizer;
 import java.util.Vector;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 /**
@@ -13,14 +16,15 @@ import java.util.Map;
  */
 public class run {
     static int start = 0;
-    static HashMap<Integer, String> pc = new HashMap<>();
-    static Map<Integer, Integer> mp = new HashMap<>();
+    static LinkedHashMap<String, Integer> pc = new LinkedHashMap<>();
+    static LinkedHashMap<Integer, String> mp = new LinkedHashMap<>();
 
     public static void execute(ArrayList<String> instructions, HashMap<String, Integer> flag,
             HashMap<Integer, Integer> memory, HashMap<String, Integer> reg) {
         System.out.println("Enter the Starting Address:");
         Scanner sc = new Scanner(System.in);
         start = sc.nextInt();
+        Programcounter.memorymap(instructions, pc, start, mp);
         for (int i = 0; i < instructions.size(); i++) {
             int next_address = 0;
             Vector<String> wd = new Vector<>();
@@ -30,19 +34,17 @@ public class run {
                 wd.add(s);
             }
             if (wd.get(0).compareTo("MOV") == 0) {
-                next_address = Instructions.MOV(wd, reg);
+                next_address += Instructions.MOV(wd, reg);
             } else if (wd.get(0).compareTo("MVI") == 0) {
-                next_address = Instructions.MVI(wd, reg);
+                next_address += Instructions.MVI(wd, reg);
             } else if (wd.get(0).compareTo("ADD") == 0) {
-                next_address = Instructions.ADD(wd, flag, reg);
+                next_address += Instructions.ADD(wd, flag, reg);
             } else if (wd.get(0).compareTo("HLT") == 0) {
-                pc.put(start, instructions.get(i));
-                next_address = 1;
                 break;
             } else if (wd.get(0).compareTo("LXI") == 0) {
-                next_address = Instructions.LXI(wd, reg, memory);
+                next_address += Instructions.LXI(wd, reg, memory);
             } else if (wd.get(0).compareTo("LDA") == 0) {
-                next_address = Instructions.LDA(wd, reg, memory);
+                next_address += Instructions.LDA(wd, reg, memory);
             } else if (wd.get(0).compareTo("STA") == 0) {
                 next_address += Instructions.STA(wd, reg, memory);
             } else if (wd.get(0).compareTo("SUB") == 0) {
@@ -67,17 +69,20 @@ public class run {
                 next_address += Instructions.CMA(wd, reg, flag);
             } else if (wd.get(0).equals("CMP")) {
                 next_address += Instructions.CMP(wd, reg, flag);
-            } else {
-                System.out.println("Invalid Input program Terminated!");
-                break;
-            }
-            if (next_address == -1) {
+            } else if (wd.get(0).equals("JMP")) {
+                next_address += branch.JMP(wd);
+                i = pc.get(wd.get(1)) - 1;
+            } else if (wd.get(0).equals("SUI")) {
+                next_address += Instructions.SUI(wd, flag, reg);
+            } else if (wd.get(0).equals("JNZ")) {
+                next_address = branch.JNZ(wd, flag);
+                if (next_address != 3) {
+                    i = pc.get(wd.get(1)) - 1;
+                }
+            } else if (next_address == -1 || next_address == 0) {
                 System.out.println("Program Terminated!");
                 break;
             }
-            pc.put(start, instructions.get(i));
-            mp.put(start, i);
-            start += next_address;
         }
         print_architecture(reg, flag, memory);
         sc.close();
@@ -85,13 +90,12 @@ public class run {
 
     public static void print_architecture(HashMap<String, Integer> reg, HashMap<String, Integer> flag,
             HashMap<Integer, Integer> memory) {
-        // Print Program Counter
-        if (!pc.isEmpty()) {
-            for (Map.Entry<Integer, String> e : pc.entrySet()) {
+        System.out.println("\n");
+        if (!mp.isEmpty()) {
+            for (Map.Entry<Integer, String> e : mp.entrySet()) {
                 System.out.println(e.getKey() + ":" + e.getValue());
             }
         }
-        // Print Register values
         System.out.println("+----------------------------------+");
         System.out.println("| A  | B  | C  | D  | E  | H  | L  |");
         System.out.println("+----------------------------------+");
