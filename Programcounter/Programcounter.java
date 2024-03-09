@@ -92,6 +92,14 @@ public class Programcounter {
         return 2;
     }
 
+    public static int SET() {
+        return 3;
+    }
+
+    public static int LDAX() {
+        return 3;
+    }
+
     public static void memorymap(ArrayList<String> inst, LinkedHashMap<String, Integer> pc, int start,
             LinkedHashMap<Integer, String> mp) {
         for (int i = 0; i < inst.size(); i++) {
@@ -144,6 +152,10 @@ public class Programcounter {
                 next_address = JNZ();
             } else if (wd.get(0).equals("SUI")) {
                 next_address = SUI();
+            } else if (wd.get(0).equals("SET")) {
+                next_address = SET();
+            } else if (wd.get(0).equals("LDAX")) {
+                next_address = LDAX();
             }
             pc.put(Integer.toString(start), i);
             mp.put(start, inst.get(i));

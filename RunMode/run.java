@@ -79,6 +79,10 @@ public class run {
                 if (next_address != 3) {
                     i = pc.get(wd.get(1)) - 1;
                 }
+            } else if (wd.get(0).equals("SET")) {
+                next_address = Instructions.SET(wd, memory);
+            } else if (wd.get(0).equals("LDAX")) {
+                next_address = Instructions.LDAX(wd, reg, memory);
             } else if (next_address == -1 || next_address == 0) {
                 System.out.println("Program Terminated!");
                 break;

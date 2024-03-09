@@ -395,4 +395,40 @@ public class Instructions {
         return 1;
     }
 
+    public static int SET(Vector<String> word, HashMap<Integer, Integer> memory) {
+        if (word.size() != 3 || word.get(1).length() != 4 || word.get(2).length() != 2) {
+            return -1;
+        }
+        int add = Integer.parseInt(word.get(1));
+        int val = Integer.parseInt(word.get(2));
+        memory.put(add, val);
+        return 3;
+    }
+
+    public static int LDAX(Vector<String> word, HashMap<String, Integer> reg, HashMap<Integer, Integer> memory) {
+        if (word.size() != 2 || reg.containsKey(word.get(1)) == false) {
+            return -1;
+        }
+        int lower_byte = 0;
+        int higher_byte = 0;
+        int add = 0;
+        if (word.get(1).equals("B")) {
+            higher_byte = reg.get("B");
+            lower_byte = reg.get("C");
+            add = (higher_byte * 100) + lower_byte;
+            reg.put("A", memory.get(add));
+        } else if (word.get(1).equals("D")) {
+            higher_byte = reg.get("D");
+            lower_byte = reg.get("E");
+            add = (higher_byte * 100) + lower_byte;
+            reg.put("A", memory.get(add));
+        } else if (word.get(1).equals("H")) {
+            higher_byte = reg.get("H");
+            lower_byte = reg.get("L");
+            add = (higher_byte * 100) + lower_byte;
+            reg.put("A", memory.get(add));
+        }
+        return 3;
+    }
+
 }
