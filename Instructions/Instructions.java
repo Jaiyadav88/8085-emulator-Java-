@@ -4,10 +4,18 @@ import java.util.HashMap;
 import java.util.Vector;
 
 public class Instructions {
-    public static int MOV(Vector<String> word, HashMap<String, Integer> reg) {
+    public static int MOV(Vector<String> word, HashMap<String, Integer> reg, HashMap<Integer, Integer> memory) {
+        // indirect memory
+        if (word.get(2).equals("M")) {
+            int low = reg.get("H");
+            int high = reg.get("L");
+            int add = low * 100 + high;
+            reg.put(word.get(1), memory.get(add));
+            return 1;
+        }
         if (word.get(0).length() != 3 || reg.containsKey(word.get(1)) == false ||
                 reg.containsKey(word.get(2)) == false) {
-            System.out.println("Invalid Instruction!");
+            System.err.println("Invalid instruction during execution of MOV");
             System.out.println("Sorry!");
             return -1;
         }
@@ -26,7 +34,7 @@ public class Instructions {
             return -1;
         }
         if (reg.containsKey(word.get(1)) == false || word.get(2).length() > 2 || Hex(word.get(2)) == false) {
-            System.out.println("Invalid Instruction!");
+            System.err.println("Invalid instruction during execution of MVI");
             System.out.println("Sorry!");
             return -1;
         }
@@ -48,17 +56,26 @@ public class Instructions {
         return (c >= '0' && c <= '9') || (c >= 'A' && c <= 'F') || (c >= 'a' && c <= 'f');
     }
 
-    public static int ADD(Vector<String> word, HashMap<String, Integer> flag, HashMap<String, Integer> reg) {
-        if (word.size() != 2) {
-            System.out.println("Invalid Input!");
+    public static int ADD(Vector<String> word, HashMap<String, Integer> flag, HashMap<String, Integer> reg,
+            HashMap<Integer, Integer> memory) {
+        if (word.size() != 2 || word.get(1).length() != 1) {
+            System.err.println("Invalid instruction during execution of ADD");
             return -1;
         }
-        if (reg.containsKey(word.get(1)) == false || word.get(1).length() != 1) {
-            System.out.println("Invalid Instruction!");
+
+        if (reg.containsKey(word.get(1)) == false && !word.get(1).equals("M")) {
+            System.err.println("Invalid instruction during execution of ADD");
             System.out.println("Sorry!");
             return -1;
         }
-        int val = reg.get("A") + reg.get(word.get(1));
+        int val = 0;
+        if (word.get(1).equals("M")) {
+            int low = reg.get("H");
+            int high = reg.get("L");
+            int add = low * 100 + high;
+            val = memory.get(add) + reg.get("A");
+        } else
+            val = reg.get("A") + reg.get(word.get(1));
         String s = Integer.toBinaryString(val);
         int ones = 0;
         for (char ch : s.toCharArray()) {
@@ -77,7 +94,7 @@ public class Instructions {
 
     public static int LXI(Vector<String> word, HashMap<String, Integer> reg, HashMap<Integer, Integer> memory) {
         if (word.size() != 3 || word.get(2).length() != 4) {
-            System.out.println("Invalid Input!");
+            System.err.println("Invalid instruction during execution of LXsI");
             return -1;
         }
         String add = word.get(2);
@@ -99,7 +116,7 @@ public class Instructions {
             val = Integer.parseInt(add.substring(2));
             reg.put("L", val);
         } else {
-            System.out.println("Invalid Input!");
+            System.err.println("Invalid instruction during execution of LXI");
             return -1;
         }
         return 3;
@@ -107,7 +124,7 @@ public class Instructions {
 
     public static int LDA(Vector<String> word, HashMap<String, Integer> reg, HashMap<Integer, Integer> memory) {
         if (word.size() != 2 || word.get(1).length() != 4) {
-            System.out.println("Invalid Input!");
+            System.err.println("Invalid instruction during execution of LDA");
             return -1;
         }
         if (memory.containsKey(Integer.parseInt(word.get(1))) == false) {
@@ -121,7 +138,7 @@ public class Instructions {
 
     public static int STA(Vector<String> word, HashMap<String, Integer> reg, HashMap<Integer, Integer> memory) {
         if (word.size() != 2 || word.get(1).length() != 4) {
-            System.out.println("Invalid Input!");
+            System.err.println("Invalid instruction during execution of STA");
             return -1;
         }
         memory.put(Integer.parseInt(word.get(1)), reg.get("A"));
@@ -134,7 +151,7 @@ public class Instructions {
             return -1;
         }
         if (reg.containsKey(word.get(1)) == false || word.get(1).length() != 1) {
-            System.out.println("Invalid Instruction!");
+            System.err.println("Invalid instruction during execution of SUB");
             System.out.println("Sorry!");
             return -1;
         }
@@ -158,7 +175,7 @@ public class Instructions {
     public static int LHLD(Vector<String> word, HashMap<String, Integer> flag, HashMap<String, Integer> reg,
             HashMap<Integer, Integer> memory) {
         if (word.size() != 2) {
-            System.out.println("Invalid Input!");
+            System.err.println("Invalid instruction during execution of LHLD");
             return -1;
         }
         String add = word.get(1);
@@ -176,7 +193,7 @@ public class Instructions {
 
     public static int SHLD(Vector<String> word, HashMap<String, Integer> reg, HashMap<Integer, Integer> memory) {
         if (word.size() != 2 || !Hex(word.get(1))) {
-            System.out.println("Invalid Input!");
+            System.err.println("Invalid instruction during execution of SHLD");
             return -1;
         }
         int val1 = reg.get("H");
@@ -190,7 +207,7 @@ public class Instructions {
     public static int STAX(Vector<String> word, HashMap<String, Integer> reg,
             HashMap<Integer, Integer> memory) {
         if (word.size() != 2) {
-            System.out.println("Invalid Input!");
+            System.err.println("Invalid instruction during execution of STAX");
             return -1;
         }
         int val = reg.get("A");
@@ -215,7 +232,7 @@ public class Instructions {
 
     public static int XCHG(Vector<String> word, HashMap<String, Integer> reg) {
         if (word.size() != 1) {
-            System.out.println("Invalid Input!");
+            System.err.println("Invalid instruction during execution of XCHG");
             return -1;
         }
         int h_val = reg.get("H");
@@ -231,7 +248,7 @@ public class Instructions {
 
     public static int ADI(Vector<String> word, HashMap<String, Integer> reg, HashMap<String, Integer> flag) {
         if (word.size() != 2 || word.get(1).length() != 2) {
-            System.out.println("Invalid Input!");
+            System.err.println("Invalid instruction during execution of ADI");
             return -1;
         }
         int val = reg.get("A") + Integer.parseInt(word.get(1));
@@ -252,7 +269,7 @@ public class Instructions {
 
     public static int INR(Vector<String> word, HashMap<String, Integer> reg, HashMap<String, Integer> flag) {
         if (word.size() != 2 && reg.containsKey(word.get(1)) == false) {
-            System.out.println("Invalid Input!");
+            System.err.println("Invalid instruction during execution of INR");
             return -1;
         }
         int val = reg.get(word.get(1));
@@ -275,7 +292,7 @@ public class Instructions {
 
     public static int DCR(Vector<String> word, HashMap<String, Integer> reg, HashMap<String, Integer> flag) {
         if (word.size() != 2 || reg.containsKey(word.get(1)) == false) {
-            System.out.println("Invalid Input!");
+            System.err.println("Invalid instruction during execution of DCR");
             return -1;
         }
         int val = reg.get(word.get(1)) - 1;
@@ -297,7 +314,7 @@ public class Instructions {
     public static int INX(Vector<String> word, HashMap<String, Integer> reg, HashMap<String, Integer> flag) {
         if (word.size() != 2 || (!word.get(1).equals("B") && !word.get(1).equals("D")
                 && !word.get(1).equals("H"))) {
-            System.out.println("Invalid Input!");
+            System.err.println("Invalid instruction during execution of INX");
             return -1;
         }
         int val1 = 0;
@@ -331,7 +348,7 @@ public class Instructions {
 
     public static int CMA(Vector<String> word, HashMap<String, Integer> reg, HashMap<String, Integer> flag) {
         if (word.size() != 1) {
-            System.out.println("Invalid Input!");
+            System.err.println("Invalid instruction during execution of CMA");
             return -1;
         }
         String bin = Integer.toBinaryString(reg.get("A"));
@@ -349,7 +366,7 @@ public class Instructions {
 
     public static int CMP(Vector<String> word, HashMap<String, Integer> reg, HashMap<String, Integer> flag) {
         if (word.size() != 2 || reg.containsKey(word.get(1)) == false) {
-            System.out.println("Invalid Input!");
+            System.err.println("Invalid instruction during execution of CMP");
             return -1;
         }
         int diff = reg.get("A") - reg.get(word.get(1));
@@ -370,11 +387,11 @@ public class Instructions {
 
     public static int SUI(Vector<String> word, HashMap<String, Integer> flag, HashMap<String, Integer> reg) {
         if (word.size() != 2) {
-            System.out.println("Invalid Input!");
+            System.err.println("Invalid instruction during execution of SUI");
             return -1;
         }
         if (word.get(1).length() != 2) {
-            System.out.println("Invalid Instruction!");
+            System.err.println("Invalid instruction during execution of SUI");
             System.out.println("Sorry!");
             return -1;
         }
@@ -397,6 +414,7 @@ public class Instructions {
 
     public static int SET(Vector<String> word, HashMap<Integer, Integer> memory) {
         if (word.size() != 3 || word.get(1).length() != 4 || word.get(2).length() != 2) {
+            System.err.println("Invalid instruction during execution of SET");
             return -1;
         }
         int add = Integer.parseInt(word.get(1));
@@ -407,6 +425,7 @@ public class Instructions {
 
     public static int LDAX(Vector<String> word, HashMap<String, Integer> reg, HashMap<Integer, Integer> memory) {
         if (word.size() != 2 || reg.containsKey(word.get(1)) == false) {
+            System.err.println("Invalid instruction during execution of LDAX");
             return -1;
         }
         int lower_byte = 0;
@@ -429,6 +448,30 @@ public class Instructions {
             reg.put("A", memory.get(add));
         }
         return 3;
+    }
+
+    public static int ANI(Vector<String> word, HashMap<String, Integer> reg, HashMap<String, Integer> flag) {
+        if (word.size() != 2 || word.get(1).length() != 2) {
+            System.err.println("Invalid instruction during execution of ANI");
+            return -1;
+        }
+        int val = Integer.parseInt(word.get(1), 16);
+        int acc = reg.get("A");
+        int and = acc & val;
+        String s = Integer.toBinaryString(and);
+        int ones = 0;
+        for (char ch : s.toCharArray()) {
+            if (ch == '1')
+                ones++;
+        }
+        if (ones % 2 == 0)
+            flag.put("P", 1);
+        reg.put("A", and);
+        flag.put("AC", ((and & 0x0F) + 1) > 0x0F ? 1 : 0);
+        flag.put("CY", (and > 0xFF) ? 1 : 0);
+        flag.put("Z", (reg.get("A") == 0) ? 1 : 0);
+        flag.put("S", (reg.get("A") == 0) ? 1 : 0);
+        return 2;
     }
 
 }

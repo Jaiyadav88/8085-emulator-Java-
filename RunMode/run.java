@@ -34,11 +34,11 @@ public class run {
                 wd.add(s);
             }
             if (wd.get(0).compareTo("MOV") == 0) {
-                next_address += Instructions.MOV(wd, reg);
+                next_address += Instructions.MOV(wd, reg, memory);
             } else if (wd.get(0).compareTo("MVI") == 0) {
                 next_address += Instructions.MVI(wd, reg);
             } else if (wd.get(0).compareTo("ADD") == 0) {
-                next_address += Instructions.ADD(wd, flag, reg);
+                next_address += Instructions.ADD(wd, flag, reg, memory);
             } else if (wd.get(0).compareTo("HLT") == 0) {
                 break;
             } else if (wd.get(0).compareTo("LXI") == 0) {
@@ -78,11 +78,14 @@ public class run {
                 next_address = branch.JNZ(wd, flag);
                 if (next_address != 3) {
                     i = pc.get(wd.get(1)) - 1;
-                }
+                } else
+                    continue;
             } else if (wd.get(0).equals("SET")) {
                 next_address = Instructions.SET(wd, memory);
             } else if (wd.get(0).equals("LDAX")) {
                 next_address = Instructions.LDAX(wd, reg, memory);
+            } else if (wd.get(0).equals("ANI")) {
+                next_address = Instructions.ANI(wd, reg, flag);
             } else if (next_address == -1 || next_address == 0) {
                 System.out.println("Program Terminated!");
                 break;

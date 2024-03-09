@@ -100,6 +100,10 @@ public class Programcounter {
         return 3;
     }
 
+    public static int ANI() {
+        return 2;
+    }
+
     public static void memorymap(ArrayList<String> inst, LinkedHashMap<String, Integer> pc, int start,
             LinkedHashMap<Integer, String> mp) {
         for (int i = 0; i < inst.size(); i++) {
@@ -156,6 +160,8 @@ public class Programcounter {
                 next_address = SET();
             } else if (wd.get(0).equals("LDAX")) {
                 next_address = LDAX();
+            } else if (wd.get(0).equals("ANI")) {
+                next_address = ANI();
             }
             pc.put(Integer.toString(start), i);
             mp.put(start, inst.get(i));
