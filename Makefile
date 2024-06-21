@@ -1,9 +1,9 @@
 all:
-	make Instructions.class
-	make run.class
-	make emulator.class
-	make Programcounter.class
-	make run
+	@make Instructions.class
+	@make run.class
+	@make emulator.class
+	@make Programcounter.class
+	@make run
 Instructions.class run.class: ./Instructions/Instructions.java ./RunMode/run.java
 	@javac ./Instructions/Instructions.java
 	@javac ./RunMode/run.java
@@ -21,3 +21,4 @@ clean:
 	@rm -f *.class
 	@rm -f ./Programcounter/*.class
 	@rm -f ./Branch/*.class
+	@rm -f *.class

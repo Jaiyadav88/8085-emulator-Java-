@@ -22,4 +22,7 @@ public class branch {
         }
         return 2;
     }
+    public static int JP(Vector<String> word, HashMap<String, Integer> flag){
+        return 3;
+    }
 }

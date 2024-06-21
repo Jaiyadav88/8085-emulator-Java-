@@ -78,8 +78,7 @@ public class run {
                 next_address = branch.JNZ(wd, flag);
                 if (next_address != 3) {
                     i = pc.get(wd.get(1)) - 1;
-                } else
-                    continue;
+                }
             } else if (wd.get(0).equals("SET")) {
                 next_address = Instructions.SET(wd, memory);
             } else if (wd.get(0).equals("LDAX")) {

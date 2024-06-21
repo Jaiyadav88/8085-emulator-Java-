@@ -39,7 +39,7 @@ public class Instructions {
             return -1;
         }
         String r = word.get(1);
-        int val = Integer.valueOf(word.get(2));
+        int val = Integer.parseInt(word.get(2));
         reg.put(r, val);
         return 2;
     }
@@ -88,7 +88,7 @@ public class Instructions {
         flag.put("AC", ((val & 0x0F) + 1) > 0x0F ? 1 : 0);
         flag.put("CY", (val > 0xFF) ? 1 : 0);
         flag.put("Z", (reg.get("A") == 0) ? 1 : 0);
-        flag.put("S", ((val & 0x80) == 1) ? 1 : 0);
+        flag.put("S", ((val & 0x80) != 0) ? 1 : 0);
         return 1;
     }
 
@@ -304,7 +304,7 @@ public class Instructions {
         }
         if (ones % 2 == 0)
             flag.put("P", 1);
-        reg.put(word.get(1), val & 0xff);
+        reg.put(word.get(1), val & 0xFF);
         flag.put("AC", (val & 0x0F) > 9 ? 1 : 0);
         flag.put("S", (val & 0x80) == 1 ? 1 : 0);
         flag.put("Z", (val & 0xFF) == 0 ? 1 : 0);
